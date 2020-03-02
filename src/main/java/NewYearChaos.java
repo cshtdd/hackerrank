@@ -12,15 +12,13 @@ public class NewYearChaos {
 
         for (int i = 0; i < q.length - 1; i++) {
             int currentValue = q[i];
+
             int originalIndex = currentValue - 1;
             if (originalIndex > i + 2){
                 System.out.println("Too chaotic");
                 return;
             }
-        }
 
-        for (int i = 0; i < q.length - 1; i++) {
-            int currentValue = q[i];
             int nextValue = q[i + 1];
 
             if (currentValue > nextValue) {
@@ -30,12 +28,6 @@ public class NewYearChaos {
                     rotations.put(currentValue, 1);
                 } else {
                     int rotationsCount = rotations.get(currentValue) + 1;
-
-//                    if (rotationsCount > 2){
-//                        System.out.println("Too chaotic");
-//                        return;
-//                    }
-
                     rotations.put(currentValue, rotationsCount);
                 }
 
