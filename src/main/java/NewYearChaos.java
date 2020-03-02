@@ -23,20 +23,24 @@ public class NewYearChaos {
 
             if (currentValue > nextValue) {
                 swap(q, i, i + 1);
-
-                if (!rotations.containsKey(currentValue)) {
-                    rotations.put(currentValue, 1);
-                } else {
-                    int rotationsCount = rotations.get(currentValue) + 1;
-                    rotations.put(currentValue, rotationsCount);
-                }
-
+                increment(rotations, currentValue);
                 i = -1;
             }
         }
 
         int result = rotations.values().stream().reduce((x, y) -> x + y).get();
         System.out.println(result);
+    }
+
+    private static int increment(HashMap<Integer, Integer> map, int key){
+        if (!map.containsKey(key)) {
+            map.put(key, 1);
+            return 1;
+        }
+
+        int result = map.get(key) + 1;
+        map.put(key, result);
+        return result;
     }
 
     private static void swap(int[] arr, int index1, int index2) {
