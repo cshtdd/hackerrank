@@ -1,19 +1,12 @@
-import java.util.Arrays;
-
 public class RepeatedString_3 {
     static long repeatedString(String s, long n) {
-        int[] chars = s.chars().toArray();
-        int length = chars.length;
+        long countInString = s.chars().filter(c -> c == 'a').count();
+        long fullStringCount = n / s.length();
+        long result = fullStringCount * countInString;
 
-        if (Arrays.stream(chars).allMatch(c -> c == 'a')){
-            return n;
-        }
-
-        int result = 0;
-
-        for (int i = 0; i < n; i++) {
-            int index = i % length;
-            if ('a' == chars[index]){
+        long reminderCount = n % s.length();
+        for (int i = 0; i < reminderCount; i++) {
+            if (s.charAt(i) == 'a'){
                 result++;
             }
         }
