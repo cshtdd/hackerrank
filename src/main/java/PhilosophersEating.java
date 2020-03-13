@@ -27,6 +27,8 @@ public class PhilosophersEating {
                 eat();
             } catch (InterruptedException e) {
                 log("Interrupted");
+            } catch (Exception e){
+                log(String.format("Unexpected Error: %s", e.getMessage()));
             } finally {
                 finishEating();
             }
@@ -99,6 +101,10 @@ public class PhilosophersEating {
         }
 
         private void grabChopstickAtIndex(int index) {
+            if (!isChopstickFreeAtIndex(index)) {
+                throw new IllegalStateException(String.format("Cannot grab taken chopstick at %d", index));
+            }
+
             log(String.format("grab chopstick [%d]", index));
             chopsticks[index] = true;
         }
@@ -109,6 +115,10 @@ public class PhilosophersEating {
         }
 
         private void releaseChopstickAtIndex(int index) {
+            if (isChopstickFreeAtIndex(index)) {
+                throw new IllegalStateException(String.format("Cannot release free chopstick at %d", index));
+            }
+
             log(String.format("release chopstick [%d]", index));
             chopsticks[index] = false;
         }
