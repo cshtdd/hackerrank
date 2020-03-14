@@ -1,50 +1,83 @@
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class SherlockIsValid {
     static String isValid(String s) {
         HashMap<Integer, Integer> characterFrequencies = new HashMap<>();
 
-        s.chars().forEach(c -> {
-            count(c, characterFrequencies);
-        });
+        s.chars().forEach(c -> increment(c, characterFrequencies));
 
-        Integer[] uniqueCounts = characterFrequencies.values().stream()
-                .distinct()
-                .toArray(Integer[]::new);
-
-        if (uniqueCounts.length == 1){
+        Integer[] uniqueFrequencies = readDistinctFrequencyCounts(characterFrequencies);
+        if (uniqueFrequencies.length == 1) {
             return "YES";
         }
 
-        if (uniqueCounts.length != 2){
-            return "NO";
+        int maxFrequency = Arrays.stream(uniqueFrequencies)
+                .max(Integer::compareTo)
+                .get();
+
+        Integer firstCharacterWithMaxFrequency = characterFrequencies.keySet()
+                .stream()
+                .filter(i -> characterFrequencies.get(i) == maxFrequency)
+                .findFirst()
+                .get();
+        decrement(firstCharacterWithMaxFrequency, characterFrequencies);
+
+        uniqueFrequencies = readDistinctFrequencyCounts(characterFrequencies);
+        if (uniqueFrequencies.length == 1) {
+            return "YES";
         }
 
-        int countDifference = Math.abs(uniqueCounts[0] - uniqueCounts[1]);
+        increment(firstCharacterWithMaxFrequency, characterFrequencies);
 
-        if (countDifference != 1){
-            return "NO";
+        Optional<Integer> firstCharacterWithMinFrequency = characterFrequencies.keySet()
+                .stream()
+                .filter(i -> characterFrequencies.get(i) == 1)
+                .findFirst();
+        if (firstCharacterWithMinFrequency.isPresent()) {
+            decrement(firstCharacterWithMinFrequency.get(), characterFrequencies);
         }
 
-        int maxCount = Math.max(uniqueCounts[0], uniqueCounts[1]);
-
-        long maxOccurrenceCount = characterFrequencies.values().stream()
-                .filter(i -> i == maxCount)
-                .count();
-
-        if (maxOccurrenceCount == 1){
+        uniqueFrequencies = readDistinctFrequencyCounts(characterFrequencies);
+        if (uniqueFrequencies.length == 1) {
             return "YES";
         }
 
         return "NO";
     }
 
-    private static void count(Integer c, HashMap<Integer, Integer> characterFrequencies) {
-        if (!characterFrequencies.containsKey(c)) {
-            characterFrequencies.put(c, 0);
-        }
+    private static Integer[] readDistinctFrequencyCounts(HashMap<Integer, Integer> characterFrequencies) {
+        return characterFrequencies.values()
+                .stream()
+                .distinct()
+                .toArray(Integer[]::new);
+    }
 
+    private static void increment(Integer c, HashMap<Integer, Integer> characterFrequencies) {
+        if (!characterFrequencies.containsKey(c)) {
+            characterFrequencies.put(c, 1);
+        } else {
+            int currentValue = characterFrequencies.get(c);
+            characterFrequencies.put(c, currentValue + 1);
+        }
+    }
+
+    private static void decrement(Integer c, HashMap<Integer, Integer> characterFrequencies) {
         int currentValue = characterFrequencies.get(c);
-        characterFrequencies.put(c, currentValue + 1);
+        int updatedValue = currentValue - 1;
+
+        if (updatedValue == 0) {
+            characterFrequencies.remove(c);
+        } else {
+            characterFrequencies.put(c, updatedValue);
+        }
+    }
+
+    public static void main(String[] args){
+        System.out.println(isValid("abc"));
+        System.out.println(isValid("aabbcd"));
+        System.out.println(isValid("aabbccddeefghi"));
+        System.out.println(isValid("abcdefghhgfedecba"));
     }
 }
