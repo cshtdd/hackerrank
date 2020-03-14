@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -8,43 +7,46 @@ public class SherlockIsValid {
 
         s.chars().forEach(c -> increment(c, characterFrequencies));
 
-        Integer[] uniqueFrequencies = readDistinctFrequencyCounts(characterFrequencies);
-        if (uniqueFrequencies.length == 1) {
+        if (allCharsHaveTheSameFrequency(characterFrequencies)) {
             return "YES";
         }
 
-        int maxFrequency = Arrays.stream(uniqueFrequencies)
+        int maxFrequency = characterFrequencies.values()
+                .stream()
                 .max(Integer::compareTo)
                 .get();
 
-        Integer firstCharacterWithMaxFrequency = characterFrequencies.keySet()
-                .stream()
-                .filter(i -> characterFrequencies.get(i) == maxFrequency)
-                .findFirst()
-                .get();
-        decrement(firstCharacterWithMaxFrequency, characterFrequencies);
+        Integer maxChar = firstCharacterWithFrequency(maxFrequency, characterFrequencies).get();
+        decrement(maxChar, characterFrequencies);
 
-        uniqueFrequencies = readDistinctFrequencyCounts(characterFrequencies);
-        if (uniqueFrequencies.length == 1) {
+        if (allCharsHaveTheSameFrequency(characterFrequencies)) {
             return "YES";
         }
 
-        increment(firstCharacterWithMaxFrequency, characterFrequencies);
+        increment(maxChar, characterFrequencies);
 
-        Optional<Integer> firstCharacterWithMinFrequency = characterFrequencies.keySet()
-                .stream()
-                .filter(i -> characterFrequencies.get(i) == 1)
-                .findFirst();
-        if (firstCharacterWithMinFrequency.isPresent()) {
-            decrement(firstCharacterWithMinFrequency.get(), characterFrequencies);
+        Optional<Integer> minChar = firstCharacterWithFrequency(1, characterFrequencies);
+        if (minChar.isPresent()) {
+            decrement(minChar.get(), characterFrequencies);
         }
 
-        uniqueFrequencies = readDistinctFrequencyCounts(characterFrequencies);
-        if (uniqueFrequencies.length == 1) {
+        if (allCharsHaveTheSameFrequency(characterFrequencies)) {
             return "YES";
         }
 
         return "NO";
+    }
+
+    private static Optional<Integer> firstCharacterWithFrequency(int value, HashMap<Integer, Integer> characterFrequencies) {
+        return characterFrequencies.keySet()
+                .stream()
+                .filter(i -> characterFrequencies.get(i) == value)
+                .findFirst();
+    }
+
+    private static boolean allCharsHaveTheSameFrequency(HashMap<Integer, Integer> characterFrequencies){
+        Integer[] uniqueFrequencies = readDistinctFrequencyCounts(characterFrequencies);
+        return uniqueFrequencies.length == 1;
     }
 
     private static Integer[] readDistinctFrequencyCounts(HashMap<Integer, Integer> characterFrequencies) {
