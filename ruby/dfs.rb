@@ -1,8 +1,8 @@
 VISITED = -1
 
 def traverse(row, col, row_count, col_count, matrix)
-  return if row < 0 || col < 0 || row >= row_count || col >= col_count
-
+  return unless (0...row_count).include?(row)
+  return unless (0...col_count).include?(col)
   return if matrix[row][col] == VISITED
 
   puts(matrix[row][col])
