@@ -2,7 +2,7 @@ VISITED = -1
 
 def traverse(row, col, row_count, col_count, matrix)
   queue = []
-  queue << { row: row, col: col }
+  queue << {row: row, col: col}
   index = 0
 
   while index < queue.length
@@ -17,22 +17,30 @@ def traverse(row, col, row_count, col_count, matrix)
     puts(current_value)
     matrix[current_row][current_col] = VISITED
 
-    if within_bounds?(current_row - 1, current_col, row_count, col_count)
-      queue << { row: current_row - 1, col: current_col }
-    end
+    queue += neighbors(current_row, current_col, row_count, col_count)
+  end
+end
 
-    if within_bounds?(current_row, current_col + 1, row_count, col_count)
-      queue << { row: current_row, col: current_col + 1 }
-    end
+def neighbors(row, col, row_count, col_count)
+  result = []
 
-    if within_bounds?(current_row + 1, current_col, row_count, col_count)
-      queue << { row: current_row + 1, col: current_col }
-    end
+  offsets = [
+    { row: -1, col: 0 },
+    { row: 0, col: 1 },
+    { row: 1, col: 0 },
+    { row: 0, col: -1 }
+  ]
 
-    if within_bounds?(current_row, current_col - 1, row_count, col_count)
-      queue << { row: current_row, col: current_col - 1 }
+  offsets.each do |offset|
+    updated_row = row + offset[:row]
+    updated_col = col + offset[:col]
+
+    if within_bounds?(updated_row, updated_col, row_count, col_count)
+      result << { row: updated_row, col: updated_col }
     end
   end
+
+  result
 end
 
 def within_bounds?(row, col, row_count, col_count)
