@@ -22,30 +22,18 @@ def traverse(row, col, row_count, col_count, matrix)
 end
 
 def neighbors(row, col, row_count, col_count)
-  result = []
-
-  offsets = [
+  [
     { row: -1, col: 0 },
     { row: 0, col: 1 },
     { row: 1, col: 0 },
     { row: 0, col: -1 }
-  ]
-
-  offsets.each do |offset|
-    updated_row = row + offset[:row]
-    updated_col = col + offset[:col]
-
-    if within_bounds?(updated_row, updated_col, row_count, col_count)
-      result << { row: updated_row, col: updated_col }
-    end
-  end
-
-  result
+  ].map { |offset| { row: row + offset[:row], col: col + offset[:col] } }
+    .filter { |location| within_bounds?(location, row_count, col_count) }
 end
 
-def within_bounds?(row, col, row_count, col_count)
-  return false unless (0...row_count).include?(row)
-  return false unless (0...col_count).include?(col)
+def within_bounds?(location, row_count, col_count)
+  return false unless (0...row_count).include?(location[:row])
+  return false unless (0...col_count).include?(location[:col])
 
   true
 end
