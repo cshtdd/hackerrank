@@ -1,34 +1,46 @@
 VISITED = -1
 
 def traverse(row, col, row_count, col_count, matrix)
-  queue = []
-  queue << {row: row, col: col}
+  queue = [{ row: row, col: col }]
   index = 0
 
   while index < queue.length
     current = queue[index]
     index += 1
-    current_row = current[:row]
-    current_col = current[:col]
-    current_value = matrix[current_row][current_col]
 
-    next if current_value == VISITED
+    next if visited?(current, matrix)
 
-    puts(current_value)
-    matrix[current_row][current_col] = VISITED
+    puts(read_at(current, matrix))
+    mark_visited(current, matrix)
 
-    queue += neighbors(current_row, current_col, row_count, col_count)
+    queue += neighbors(current, row_count, col_count)
   end
 end
 
-def neighbors(row, col, row_count, col_count)
-  [
+def read_at(location, matrix)
+  matrix[location[:row]][location[:col]]
+end
+
+def visited?(location, matrix)
+  read_at(location, matrix) == VISITED
+end
+
+def mark_visited(location, matrix)
+  matrix[location[:row]][location[:col]] = VISITED
+end
+
+def neighbors(location, row_count, col_count)
+  all_neighbors = [
     { row: -1, col: 0 },
     { row: 0, col: 1 },
     { row: 1, col: 0 },
     { row: 0, col: -1 }
-  ].map { |offset| { row: row + offset[:row], col: col + offset[:col] } }
-    .filter { |location| within_bounds?(location, row_count, col_count) }
+  ].map do |offset|
+    { row: location[:row] + offset[:row],
+      col: location[:col] + offset[:col] }
+  end
+
+  all_neighbors.filter { |loc| within_bounds?(loc, row_count, col_count) }
 end
 
 def within_bounds?(location, row_count, col_count)
