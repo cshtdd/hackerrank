@@ -2,8 +2,7 @@ public class DFS {
     public static final int VISITED = -1;
 
     private static void traverse(int row, int col, int rowCount, int colCount, int[][] matrix) {
-        if (row < 0 || col < 0 ||
-                row >= rowCount || col >= colCount) {
+        if (row < 0 || col < 0 || row >= rowCount || col >= colCount) {
             return;
         }
 
