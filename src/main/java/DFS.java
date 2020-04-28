@@ -1,5 +1,4 @@
 public class DFS {
-
     public static final int VISITED = -1;
 
     private static void traverse(int row, int col, int rowCount, int colCount, int[][] matrix) {
