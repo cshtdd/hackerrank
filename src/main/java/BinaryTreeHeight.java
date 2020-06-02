@@ -13,6 +13,9 @@ class BinaryTreeHeight {
         }
     }
 
+    /*
+     * Exercise 1: Tree Height
+     */
     public static int height(Node root) {
         if (root == null) {
             return -1;
@@ -22,6 +25,24 @@ class BinaryTreeHeight {
         int rightHeight = height(root.right);
 
         return 1 + Math.max(leftHeight, rightHeight);
+    }
+
+    /*
+     * Exercise 2: Lowest Common ancestor
+     */
+    public static Node lca(Node root, int v1, int v2) {
+        int min = Math.min(v1, v2);
+        int max = Math.max(v1, v2);
+
+        if (root.data >= min && root.data <= max){
+            return root;
+        }
+
+        if (root.data <= min){
+            return lca(root.right, min, max);
+        }
+
+        return lca(root.left, min, max);
     }
 
     public static Node insert(Node root, int data) {
