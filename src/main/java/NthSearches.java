@@ -4,32 +4,55 @@ public class NthSearches {
         public Node left;
         public Node right;
 
-        public Node(int data){
+        public Node(int data) {
             this(data, null, null);
         }
 
-        public Node(int data, Node left, Node right){
+        public Node(int data, Node left, Node right) {
             this.data = data;
             this.left = left;
             this.right = right;
         }
     }
 
-    private Node root = null;
+    private Node treeRoot = null;
 
-    public int nthLargest(int n){
+    public int nthLargest(int n) {
         return -1;
     }
 
-    public void add(int n){
+    public void add(int n) {
+        Node newNode = add(treeRoot, n);
+        if (treeRoot == null) {
+            treeRoot = newNode;
+        }
+    }
+
+    private Node add(Node node, int n) {
+        if (node == null) {
+            return new Node(n);
+        }
+
+        if (n >= node.data) {
+            Node newNode = add(node.right, n);
+            if (node.right == null) {
+                node.right = newNode;
+            }
+            return newNode;
+        }
+
+        Node newNode = add(node.left, n);
+        if (node.left == null) {
+            node.left = newNode;
+        }
+        return newNode;
+    }
+
+    public void traverse() {
         // TODO
     }
 
-    public void traverse(){
-        // TODO
-    }
-
-    public static void main(String[] args){
+    public static void main(String[] args) {
         NthSearches tree = new NthSearches();
         tree.add(5);
         tree.add(3);
