@@ -56,7 +56,7 @@ public class NthSearches {
         System.out.println(result);
     }
 
-    private void inOrder(Node node, Consumer<Integer> callback){
+    private void inOrder(Node node, Consumer<Integer> callback) {
         if (node == null) {
             return;
         }
@@ -68,6 +68,13 @@ public class NthSearches {
         inOrder(node.right, callback);
     }
 
+    public int nthSmallest(int n) {
+        AtomicInteger counter = new AtomicInteger(n);
+        AtomicInteger result = new AtomicInteger();
+        nthSmallest(treeRoot, counter, result);
+        return result.get();
+    }
+
     public int nthLargest(int n) {
         AtomicInteger counter = new AtomicInteger(n);
         AtomicInteger result = new AtomicInteger();
@@ -75,19 +82,34 @@ public class NthSearches {
         return result.get();
     }
 
-    private void nthLargest(Node node, AtomicInteger n, AtomicInteger result){
-        if (node == null){
+    private void nthLargest(Node node, AtomicInteger n, AtomicInteger result) {
+        if (node == null) {
             return;
         }
 
         nthLargest(node.right, n, result);
 
-        if (n.decrementAndGet() == 0){
+        if (n.decrementAndGet() == 0) {
             result.set(node.data);
             return;
         }
 
         nthLargest(node.left, n, result);
+    }
+
+    private void nthSmallest(Node node, AtomicInteger n, AtomicInteger result) {
+        if (node == null) {
+            return;
+        }
+
+        nthSmallest(node.left, n, result);
+
+        if (n.decrementAndGet() == 0) {
+            result.set(node.data);
+            return;
+        }
+
+        nthSmallest(node.right, n, result);
     }
 
     public static void main(String[] args) {
@@ -112,6 +134,9 @@ public class NthSearches {
         tree.add(4);
 
         tree.print();
-        System.out.println(String.format("%d-th Largest: %d", 3, tree.nthLargest(3)));
+
+        final int N = 2;
+        System.out.println(String.format("%d-th Largest: %d", N, tree.nthLargest(N)));
+        System.out.println(String.format("%d-th Smallest: %d", N, tree.nthSmallest(N)));
     }
 }
