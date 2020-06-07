@@ -10,26 +10,14 @@ public class CheckBST {
             return true;
         }
 
-        if (root.left != null) {
-            if (root.left.data >= root.data) {
-                return false;
-            }
-
-            if (!checkBST(root.left)) {
-                return false;
-            }
+        if (root.left != null && root.left.data >= root.data) {
+            return false;
         }
 
-        if (root.right != null) {
-            if (root.right.data <= root.data) {
-                return false;
-            }
-
-            if (!checkBST(root.right)) {
-                return false;
-            }
+        if (root.right != null && root.right.data <= root.data) {
+            return false;
         }
 
-        return true;
+        return checkBST(root.left) && checkBST(root.right);
     }
 }
