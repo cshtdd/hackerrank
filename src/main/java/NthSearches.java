@@ -69,26 +69,25 @@ public class NthSearches {
     }
 
     public int nthLargest(int n) {
-        final int[] result = new int[2];
-        result[0] = n;
-        nthLargest(treeRoot, result);
-        return result[1];
+        AtomicInteger counter = new AtomicInteger(n);
+        AtomicInteger result = new AtomicInteger();
+        nthLargest(treeRoot, counter, result);
+        return result.get();
     }
 
-    private void nthLargest(Node node, int[] counters){
+    private void nthLargest(Node node, AtomicInteger n, AtomicInteger result){
         if (node == null){
             return;
         }
 
-        nthLargest(node.right, counters);
+        nthLargest(node.right, n, result);
 
-        counters[0]--;
-        if (counters[0] == 0){
-            counters[1] = node.data;
+        if (n.decrementAndGet() == 0){
+            result.set(node.data);
             return;
         }
 
-        nthLargest(node.left, counters);
+        nthLargest(node.left, n, result);
     }
 
     public static void main(String[] args) {
