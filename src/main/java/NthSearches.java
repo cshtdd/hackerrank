@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.*;
 
 public class NthSearches {
@@ -51,11 +53,22 @@ public class NthSearches {
     }
 
     public void print() {
-        // TODO
+        List<String> dataPieces = new ArrayList<>();
+        inOrder(treeRoot, n -> dataPieces.add(String.format("%d", n)));
+        String result = String.join(", ", dataPieces);
+        System.out.println(result);
     }
 
     private void inOrder(Node node, Consumer<Integer> callback){
-        // TODO
+        if (node == null) {
+            return;
+        }
+
+        inOrder(node.left, callback);
+
+        callback.accept(node.data);
+
+        inOrder(node.right, callback);
     }
 
     public static void main(String[] args) {
