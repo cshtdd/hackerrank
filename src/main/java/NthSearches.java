@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 
 public class NthSearches {
@@ -20,10 +21,6 @@ public class NthSearches {
     }
 
     private Node treeRoot = null;
-
-    public int nthLargest(int n) {
-        return -1;
-    }
 
     public void add(int n) {
         Node newNode = add(treeRoot, n);
@@ -71,16 +68,28 @@ public class NthSearches {
         inOrder(node.right, callback);
     }
 
+    public int nthLargest(int n) {
+        final int[] result = new int[1];
+        nthLargest(treeRoot, new AtomicInteger(n), x -> result[0] = x);
+        return result[0];
+    }
+
+    private void nthLargest(Node node, AtomicInteger n, Consumer<Integer> callback){
+        if (node == null){
+            return;
+        }
+
+        nthLargest(node.right, n, callback);
+
+        if (n.decrementAndGet() == 0){
+            callback.accept(node.data);
+            return;
+        }
+
+        nthLargest(node.left, n, callback);
+    }
+
     public static void main(String[] args) {
-        NthSearches tree = new NthSearches();
-        tree.add(5);
-        tree.add(3);
-        tree.add(9);
-        tree.add(7);
-        tree.add(8);
-        tree.add(1);
-        tree.add(2);
-        tree.add(4);
         /*
                   5
                 /   \
@@ -91,6 +100,17 @@ public class NthSearches {
               2     8
          */
 
+        NthSearches tree = new NthSearches();
+        tree.add(5);
+        tree.add(3);
+        tree.add(9);
+        tree.add(7);
+        tree.add(8);
+        tree.add(1);
+        tree.add(2);
+        tree.add(4);
+
         tree.print();
+        System.out.println(String.format("%d-th Largest: %d", 3, tree.nthLargest(3)));
     }
 }
