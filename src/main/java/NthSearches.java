@@ -1,3 +1,5 @@
+import java.util.function.*;
+
 public class NthSearches {
     private static class Node {
         public int data;
@@ -48,7 +50,11 @@ public class NthSearches {
         return newNode;
     }
 
-    public void traverse() {
+    public void print() {
+        // TODO
+    }
+
+    private void inOrder(Node node, Consumer<Integer> callback){
         // TODO
     }
 
@@ -72,6 +78,6 @@ public class NthSearches {
               2     8
          */
 
-        tree.traverse();
+        tree.print();
     }
 }
